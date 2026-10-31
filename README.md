@@ -26,19 +26,19 @@ Move local state to the full-fledged shared state with minimal paradigm shift an
 + const counterState = new State(0);
 
   function Counter() {
--   const [counter, setCounter] = useState(0);
-+   const [counter, setCounter] = useExternalState(counterState);
+-   const [count, setCount] = useState(0);
++   const [count, setCount] = useExternalState(counterState);
 
-    const handleClick = () => setCounter((value) => value + 1);
+    const handleClick = () => setCount((c) => c + 1);
 
-    return <button onClick={handleClick}>+ {counter}</button>;
+    return <button onClick={handleClick}>+ {count}</button>;
   }
 
   function ResetButton() {
--   const [, setCounter] = useState(0);
-+   const [, setCounter] = useExternalState(counterState);
+-   const [, setCount] = useState(0);
++   const [, setCount] = useExternalState(counterState);
 
-    const handleClick = () => setCounter(0);
+    const handleClick = () => setCount(0);
 
     return <button onClick={handleClick}>×</button>;
   }
@@ -67,19 +67,19 @@ With SSR, it's common practice to put shared values into React Context rather th
 + const AppContext = createContext(null);
 
   function Counter() {
--   const [counter, setCounter] = useExternalState(counterState);
-+   const [counter, setCounter] = useExternalState(useContext(AppContext));
+-   const [count, setCount] = useExternalState(counterState);
++   const [count, setCount] = useExternalState(useContext(AppContext));
 
-    const handleClick = () => setCounter((value) => value + 1);
+    const handleClick = () => setCount((c) => c + 1);
 
-    return <button onClick={handleClick}>+ {counter}</button>;
+    return <button onClick={handleClick}>+ {count}</button>;
   }
 
   function ResetButton() {
--   const [, setCounter] = useExternalState(counterState);
-+   const [, setCounter] = useExternalState(useContext(AppContext));
+-   const [, setCount] = useExternalState(counterState);
++   const [, setCount] = useExternalState(useContext(AppContext));
 
-    const handleClick = () => setCounter(0);
+    const handleClick = () => setCount(0);
 
     return <button onClick={handleClick}>×</button>;
   }
@@ -98,7 +98,7 @@ With SSR, it's common practice to put shared values into React Context rather th
 
 &#x2BC8; [Live demo: Shared state with Context](https://codesandbox.io/p/sandbox/9mpfsf?file=%252Fsrc%252FApp.tsx)
 
-⬥ The `useInitialValue(initializer)` hook returns a value that remains unchanged across potential re-renders by calling the `initializer` function only once. Unlike `useState()` with an initializer, `useInitialValue()` seeks to bypass extra initializer calls in development Strict Mode, too. Under the hood, this hook wraps up the common pattern of [stabilizing values with React's `useRef()`](https://react.dev/reference/react/useRef#avoiding-recreating-the-ref-contents).
+⬥ The `useInitialValue(initializer)` hook returns a value that remains unchanged across potential re-renders by calling the `initializer` function only once. Unlike `useState()` with an initializer function, `useInitialValue()` seeks to bypass extra initializer calls in development Strict Mode, too. Under the hood, this hook wraps up the common pattern of [stabilizing values with React's `useRef()`](https://react.dev/reference/react/useRef#avoiding-recreating-the-ref-contents).
 
 ⬥ The application state can also be split across multiple instances of `State` and multiple Contexts to maintain clearer semantic boundaries and more targeted data update subscriptions.
 
