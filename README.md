@@ -44,7 +44,11 @@ Move local state to the full-fledged shared state with minimal paradigm shift an
   }
 
   export function App() {
-    return <><Counter/>{" "}<ResetButton/></>;
+    return (
+      <>
+        <Counter/>{" "}<ResetButton/>
+      </>
+    );
   }
 ```
 
@@ -87,12 +91,13 @@ With SSR, it's common practice to put shared values into React Context rather th
   export function App() {
 +   const appState = useInitialValue(() => new State(0));
 
--   return <><Counter/>{" "}<ResetButton/></>;
-+   return (
+    return (
+-     <>
 +     <AppContext.Provider value={appState}>
-+       <Counter/>{" "}<ResetButton/>
+        <Counter/>{" "}<ResetButton/>
+-     </>
 +     </AppContext.Provider>
-+   );
+    );
   }
 ```
 
@@ -477,7 +482,7 @@ const [state, setState] = useRouteState(url("/"));
 
 The URL schema as shown above doesn't have to cover the entire app. This approach allows for incremental or partial adoption of type-safe routing, where needed.
 
-On the other hand, once the entire app is covered with type-safe routes, we might want to avoid future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
+On the other hand, once the entire app is covered with type-safe routes, it might be reasonable to prevent future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
 
 ```ts
 declare module "react-statepack" {
@@ -489,7 +494,9 @@ declare module "react-statepack" {
 
 ### Nested routes
 
-All routes are handled independently, so type-safe nested routes don't require special handling and don't maintain implicit relations with their parent routes. It also means that nested routes don't inherit their parent route parameters by default. Relations between routes (also beyond the direct inheritance of parameters) can be pretty straightforwardly defined at the URL schema level without imposing implicit constraints, which could be hard to work around.
+All routes are handled independently, so nested routes don't require special handling and don't maintain implicit relations with other routes. This also means that nested routes don't inherit their parent route parameters by default.
+
+With type-safe routes, any practical relations between them can be transparently defined at the URL schema level, without default implicit constraints, too. Here's an example:
 
 ```ts
 import { createURLBuilder } from "url-shape";
