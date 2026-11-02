@@ -335,16 +335,27 @@ The shape of the SPA navigation API is largely aligned with the similar built-in
 route.navigate({ href: "/intro", history: "replace", scroll: "off" });
 ```
 
-⬥ Tweak link components by adding a relevant combination of the optional `data-` props corresponding to the `options` of `route.navigate(options)`:
+<a name="navigation-options"></a>
+The navigation options, used with `route.navigate(options)`, include:
+- `href`, a target URL;
+- `referrer`, an original URL prior to the navigation;
+- `history: "push" | "replace"`, controlling whether to save the navigation to the browser history session or not (default: `"push"`, save);
+- `target`, accepting the HTML link `target` attribute values;
+- `scroll: "auto" | "off"`, controlling whether the content should be automatically scrolled to the top after the navigation, similarly to the ordinary link navigation (`"auto"`, default), or not (`"off"`);
+- `spa: "auto" | "off"`, controlling whether the navigation is in the SPA mode (`"auto"`, default) or requires a full-page reload (`"off"`);
+- `id`, an optional ID that can be used in navigation handlers to identify a specific navigation.
+
+⬥ Tweak link components by adding a relevant combination of the optional `data-` props corresponding to the [navigation options](#navigation-options) outlined above:
 
 ```jsx
 <A href="/intro">Intro</A>
 <A href="/intro" data-history="replace">Intro</A>
 <A href="/intro" data-scroll="off">Intro</A>
 <A href="/intro" data-spa="off">Intro</A>
+<A href="/intro" data-id="header-intro-link">Intro</A>
 ```
 
-Using HTML link attributes as SPA link component props makes link components easily interchangeable with HTML links and more familiar without prior knowledge.
+Using props compatible with HTML link attributes makes link components easily interchangeable with HTML links. For this reason, the link components' navigation is shaped by the standard and familiar `href` and `target` props, while the rest of the navigation options can be specified as `data-` attibutes.
 
 ⬥ Link components also automatically receive the `data-active="true"` prop whenever their `href` prop matches the current URL, which can be used for additional styling.
 
@@ -386,7 +397,7 @@ function App() {
 
 &#x2BC8; [Live demo: Routing middleware](https://codesandbox.io/p/sandbox/9ks34r?file=%2Fsrc%2FApp.tsx)
 
-⬥ The object parameter of the hooks' callbacks has the shape of the `route.navigate()`'s options, including `href` and `referrer`, the navigation destination and initial URLs.
+⬥ The object parameter of the hooks' callbacks has the shape of the [navigation options](#navigation-options), including `href` and `referrer`, the navigation destination and initial URLs.
 
 ⬥ The callback of both hooks is first called when the component gets mounted if the route is already in the navigation-complete state.
 
@@ -425,7 +436,7 @@ When it's necessary to put a portion of the app's state to the URL, use this hoo
 
 &#x2BC8; [Live demo: URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
 
-⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the `route.navigate()`'s options. Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
+⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the [navigation options](#navigation-options). Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
 
 ⬥ See also the [Type-safe routes](#type-safe-routes) section. &#x2BC8; [Live demo: Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
 
