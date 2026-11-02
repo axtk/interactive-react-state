@@ -1,6 +1,6 @@
 # react-statepack
 
-This lib explores an approach to shared state management and routing in React apps that seeks to approximate common React patterns and to be expressed with familiar and concise code.
+This lib explores an approach to shared state management and routing in React apps that seeks to be an extension to common React patterns in order to be expressed with concise and familiar code.
 
 Core parts:
 
@@ -124,6 +124,7 @@ function ItemList() {
 }
 
 export function App() {
+  // Multi-instance state
   const appState = useInitialValue(() => ({
     users: new State(/* User data, e.g. a map of <id>: <user info> */),
     items: new State(/* Items, e.g. a map of <id>: <item info> */),
@@ -213,7 +214,7 @@ export function App() {
 
 ### Custom subscription
 
-Use the second parameter of `useExternalState(state, subscribe?)` for more fine-grained control over component's subscription to the `State` instance and re-renders:
+Use the optional second parameter of `useExternalState(state, subscribe?)` for more fine-grained control over component's subscription to the `State` instance and re-renders:
 
 ```js
 const itemState = new State({/* A map of `<id>: <item>` */});
@@ -235,7 +236,7 @@ function ItemCard({ id }) {
 
 ⬥ Set the `subscribe` parameter to `false`, as in `useExternalState(state, false)`, to tell the hook not to subscribe the component to tracking the external state updates altogether. A use case for it is when a component makes use of the external state value setter without using the state value itself. The `false` parameter could have been used in the `ResetButton` in the first example above, but in many cases of infrequent updates with lightweight component renders it might be unnecessary, since React automatically skips updating the DOM when there are no changes.
 
-⬥ Under the hood, the `select(state, selector)` utility, discussed in the previous section, creates a custom subscription based on the selector function which is then passed to `useExternalState()`.
+⬥ Under the hood, the `select(state, selector)` utility, discussed in the previous section, creates a custom subscription based on the selector function. This utility function also makes use of the optional third parameter of `useExternalState()`, `getShapshot()`, a function that returns a value derived from `state`.
 
 ### Integration with Immer
 
@@ -259,11 +260,11 @@ const counterState = new PersistentState(0, { key: "counter" });
 
 ⬥ Set up interaction with a custom storage by setting `{ read(), write(value)? }` as `options` in `new PersistentState(value, options)`.
 
-⬥ `PersistentState` skips interaction with the browser storage in non-browser environments, which makes it usable with SSR. Since persistent state depends on a browser storage, mismatch errors while hydrating SSR content based on a persisent state should be specifically handled with React's `use(browser())` (v19.3+) or other client-side rendering detection techniques such as [`react-clientside`](https://www.npmjs.com/package/react-clientside).
+⬥ `PersistentState` skips interaction with the browser storage in non-browser environments, which makes it usable with SSR. Since persistent state depends on a browser API (`localStorage` or `sessionStorage`) by default, mismatch errors while hydrating SSR content based on a persisent state should be specifically handled with React's `use(browser())` (v19.3+) or other client-side rendering detection techniques such as [`react-clientside`](https://www.npmjs.com/package/react-clientside).
 
 ## useRoute
 
-Use this hook for URL-based rendering and SPA navigation, which boil down to accessing and changing the current URL treated as shared state under the hood.
+Use this hook for URL-based rendering and SPA navigation. Under the hood, this boils down to accessing and changing the shared URL state.
 
 ### URL-based rendering
 
@@ -299,7 +300,7 @@ function App() {
 
 ### SPA navigation
 
-The shape of the SPA navigation API is largely aligned with the similar built-in browser APIs (but still compatible with SSR):
+The shape of the SPA navigation API is largely aligned with the similar built-in browser APIs (while still being compatible with SSR):
 
 ```diff
 + import { A, useRoute } from "react-statepack";
@@ -328,7 +329,7 @@ The shape of the SPA navigation API is largely aligned with the similar built-in
 
 ⬥ The `route` object returned from `useRoute()` exposes an API resembling the built-in APIs of `window.location` and `history` carried over to SPA navigation: `.assign(url)`, `.replace(url)`, `.reload()`, `.href`, `.pathname`, `.search`, `.hash`, `.back()`, `.forward()`, `.go(delta)`.
 
-⬥ `route.navigate(options)` combines and extends `route.assign(url)` and `route.replace(url)` serving as a handy drop-in replacement for the similar `window.location` methods:
+⬥ While `route.assign(url)` and `route.replace(url)` serve as a handy drop-in replacement for the similar `window.location` methods, `route.navigate(options)` combines and extends these methods:
 
 ```js
 route.navigate({ href: "/intro", history: "replace", scroll: "off" });
