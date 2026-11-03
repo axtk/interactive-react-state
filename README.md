@@ -10,7 +10,7 @@ Core parts:
 
 Under the hood, routing is a special case of shared state management, too, with the shared state being the URL. So all these core parts fall under the broad category of state management, with `useExternalState()` being the general-purpose React hook for arbitrary state management (which is also the basis of the lib's other hooks).
 
-\+ [Annotated live demos](#annotated-live-demos) · [Internals](#internals)
+\+ [Annotated live demos](#annotated-live-demos) · [Internals](#internals) · [Motivation and comparison](https://axtk.github.io/posts/react-statepack_backstory)
 
 ## useExternalState
 
