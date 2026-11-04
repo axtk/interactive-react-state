@@ -453,10 +453,10 @@ When it comes to accessing parameters extracted from a URL pattern, by default t
 const { at } = useRoute();
 
 at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id} />);
-// ^ Record<string, string | undefined>
+//                                   ^ Record<string, string | undefined>
 
 const [state, setState] = useRouteState("/");
-// ^ { query: Record<string, string | undefined> }
+//     ^ { query: Record<string, string | undefined> }
 ```
 
 &#x2BC8; Loosely typed routing demos: [URL-based rendering](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx) &middot; [URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
@@ -486,13 +486,13 @@ The type-aware URL builder `url(pattern, options?)` provides hints about the typ
 const { at } = useRoute();
 
 at(url("/sections/:id"), ({ params }) => <Section id={params.id} />);
-// ^ { id: number }
+//                          ^ { id: number }
 
 const [state, setState] = useRouteState(url("/"));
-// ^ { query?: { x: number, y: number } }
+//     ^ { query?: { x: number, y: number } }
 
 <A href={url("/sections/:id", { id: 1 })}>Section 1</A>;
-// ^ { id: number }
+//                            ^ { id: number }
 ```
 
 &#x2BC8; Live demos: [Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx) &middot; [Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
@@ -594,7 +594,7 @@ Set `{ silent: true }` as the last parameter of the trackable action returned fr
 
 ```js
 const [state, fetchItems] = useTransientState(fetchItemsOriginal);
-// ^ `state.pending` remains `false` in the silent mode
+//     ^ `state.pending` remains `false` in the silent mode
 
 fetchItems({ silent: true });
 ```
@@ -605,7 +605,7 @@ Use case: Avoid flashing a process indicator when the action is likely to comple
 
 ```js
 const [state, fetchItems] = useTransientState(fetchItemsOriginal);
-// ^ `state.pending` remains `false` during the delay
+//     ^ `state.pending` remains `false` during the delay
 
 fetchItems({ delay: 500 }); // in milliseconds
 ```
