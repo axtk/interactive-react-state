@@ -8,7 +8,7 @@ Core parts:
 - Routing: [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [Type-safe routes](#type-safe-routes)
 - Async state management: [useTransientState](#usetransientstate)
 
-Under the hood, routing is a special case of shared state management, too, with the shared state being the URL. So all these core parts fall under the broad category of state management, with `useExternalState()` being the general-purpose React hook for arbitrary state management (which is also the basis of the lib's other hooks).
+Under the hood, routing is a special case of shared state management, too, with the shared state being the URL. So all these core parts fall under the broad category of state management, with `useExternalState()` being the general-purpose React hook for arbitrary state management (which is also the basis of the library's other hooks).
 
 \+ [Annotated live demos](#annotated-live-demos) · [Internals](#internals) · [Motivation and comparison](https://axtk.github.io/posts/react-statepack_backstory)
 
@@ -460,7 +460,7 @@ While the loosely typed routing as shown above works just fine, optionally, more
 
 ```ts
 import { createURLBuilder } from "url-shape";
-import { z } from "zod"; // Or another Standard Schema-compliant lib
+import { z } from "zod"; // Or another Standard Schema-compliant library
 
 // Get a type-aware URL builder `url()` based on a URL schema
 export const url = createURLBuilder({
