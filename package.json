@@ -1,6 +1,6 @@
 {
   "name": "react-statepack",
-  "version": "0.5.13",
+  "version": "0.5.14",
   "description": "A shared state management and routing lib for React apps",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
