@@ -1,6 +1,6 @@
 # react-statepack
 
-This lib explores an approach to shared state management and routing in React apps that seeks to be an extension to common React patterns in order to be expressed with concise and familiar code.
+This library explores an approach to shared state management and routing in React apps that seeks to extend common React patterns in order to produce concise and familiar code.
 
 Core parts:
 
