@@ -217,7 +217,9 @@ export function App() {
 Use the optional second parameter of `useExternalState(state, subscribe?)` for more fine-grained control over component's subscription to the `State` instance and re-renders:
 
 ```js
-const itemState = new State({/* A map of `<id>: <item>` */});
+const itemState = new State({
+  /* A map of `<id>: <item>` */
+});
 
 // Renders a specific item from `itemState`
 function ItemCard({ id }) {
@@ -337,6 +339,7 @@ route.navigate({ href: "/intro", history: "replace", scroll: "off" });
 
 <a name="navigation-options"></a>
 The navigation options, used with `route.navigate(options)`, include:
+
 - `href`, a target URL;
 - `referrer`, an original URL prior to the navigation;
 - `history: "push" | "replace"`, controlling whether to save the navigation to the browser history session or not (default: `"push"`, save);
@@ -378,15 +381,17 @@ function App() {
   const { route } = useRoute();
   const [hasUnsavedChanges, setUnsavedChanges] = useState(false);
 
-  const handleNavigationStart = useCallback(({ href }) => {
-    if (hasUnsavedChanges)
-      return false; // Preventing navigation
+  const handleNavigationStart = useCallback(
+    ({ href }) => {
+      if (hasUnsavedChanges) return false; // Preventing navigation
 
-    if (href === "/") {
-      route.href = "/intro"; // SPA redirection
-      return false;
-    }
-  }, [hasUnsavedChanges, route]);
+      if (href === "/") {
+        route.href = "/intro"; // SPA redirection
+        return false;
+      }
+    },
+    [hasUnsavedChanges, route],
+  );
 
   useNavigationStart(handleNavigationStart);
   useNavigationComplete(setTitle);
@@ -447,11 +452,11 @@ When it comes to accessing parameters extracted from a URL pattern, by default t
 ```tsx
 const { at } = useRoute();
 
-at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id}/>)
-                                  // ^ Record<string, string | undefined>
+at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id} />);
+// ^ Record<string, string | undefined>
 
 const [state, setState] = useRouteState("/");
-    // ^ { query: Record<string, string | undefined> }
+// ^ { query: Record<string, string | undefined> }
 ```
 
 &#x2BC8; Loosely typed routing demos: [URL-based rendering](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx) &middot; [URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
@@ -480,14 +485,14 @@ The type-aware URL builder `url(pattern, options?)` provides hints about the typ
 ```tsx
 const { at } = useRoute();
 
-at(url("/sections/:id"), ({ params }) => <Section id={params.id}/>)
-                         // ^ { id: number }
+at(url("/sections/:id"), ({ params }) => <Section id={params.id} />);
+// ^ { id: number }
 
 const [state, setState] = useRouteState(url("/"));
-    // ^ { query?: { x: number, y: number } }
+// ^ { query?: { x: number, y: number } }
 
-<A href={url("/sections/:id", { id: 1 })}>Section 1</A>
-                           // ^ { id: number }
+<A href={url("/sections/:id", { id: 1 })}>Section 1</A>;
+// ^ { id: number }
 ```
 
 &#x2BC8; Live demos: [Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx) &middot; [Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
@@ -589,9 +594,9 @@ Set `{ silent: true }` as the last parameter of the trackable action returned fr
 
 ```js
 const [state, fetchItems] = useTransientState(fetchItemsOriginal);
-    // ^ `state.pending` remains `false` in the silent mode
+// ^ `state.pending` remains `false` in the silent mode
 
-fetchItems({ silent: true })
+fetchItems({ silent: true });
 ```
 
 ### Delayed pending state
@@ -600,9 +605,9 @@ Use case: Avoid flashing a process indicator when the action is likely to comple
 
 ```js
 const [state, fetchItems] = useTransientState(fetchItemsOriginal);
-    // ^ `state.pending` remains `false` during the delay
+// ^ `state.pending` remains `false` during the delay
 
-fetchItems({ delay: 500 }) // in milliseconds
+fetchItems({ delay: 500 }); // in milliseconds
 ```
 
 ### Custom rejection handler
@@ -612,7 +617,7 @@ Allow the trackable action to reject explicitly with `{ throws: true }` as the l
 ```js
 const [state, fetchItems] = useTransientState(fetchItemsOriginal);
 
-fetchItems({ throws: true }).catch(handleError)
+fetchItems({ throws: true }).catch(handleError);
 ```
 
 ### Action state provider
@@ -623,8 +628,8 @@ fetchItems({ throws: true }).catch(handleError)
 import { TransientStateProvider } from "react-statepack";
 
 <TransientStateProvider>
-  <App/>
-</TransientStateProvider>
+  <App />
+</TransientStateProvider>;
 ```
 
 Use the provider to set up a specific initial async action state when required:
@@ -635,8 +640,8 @@ const initialState = {
 };
 
 <TransientStateProvider value={initialState}>
-  <App/>
-</TransientStateProvider>
+  <App />
+</TransientStateProvider>;
 ```
 
 ⬥ With an explicit value or without, the `<TransientStateProvider>`'s nested components will only respond to updates in the particular action state they subscribed to by means of `useTransientState`.
