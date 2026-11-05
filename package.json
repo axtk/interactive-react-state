@@ -44,6 +44,6 @@
     "zod": "^4.6.7"
   },
   "dependencies": {
-    "statepack": "^0.5.2"
+    "statepack": "^0.5.3"
   }
 }
