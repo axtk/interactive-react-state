@@ -1,6 +1,6 @@
 {
   "name": "compact-react-state",
-  "version": "0.6.0",
+  "version": "0.5.16",
   "description": "Shared state management in React apps",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
