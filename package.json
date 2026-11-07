@@ -1,6 +1,6 @@
 {
   "name": "interactive-react-state",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A shared state management and routing lib for React apps",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
