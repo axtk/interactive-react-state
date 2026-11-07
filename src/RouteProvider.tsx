@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect } from "react";
-import { Route } from "statepack";
+import { Route } from "interactive-state";
 import { RouteContext } from "./RouteContext.ts";
 import { useInitialValue } from "./useInitialValue.ts";
 

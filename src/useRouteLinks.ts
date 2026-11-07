@@ -1,5 +1,5 @@
 import { type RefObject, useContext, useEffect } from "react";
-import type { ContainerElement, Route } from "statepack";
+import type { ContainerElement, Route } from "interactive-state";
 import { RouteContext } from "./RouteContext.ts";
 
 /**

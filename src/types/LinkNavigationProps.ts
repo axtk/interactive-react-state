@@ -1,4 +1,4 @@
-import type { NavigationOptions } from "statepack";
+import type { NavigationOptions } from "interactive-state";
 
 export type LinkNavigationProps = {
   "data-spa"?: NavigationOptions["spa"];
