@@ -680,4 +680,4 @@ Find also the code of these live demos in the repo's [`tests`](https://github.co
 
 ## Internals
 
-[`statepack`](https://www.npmjs.com/package/statepack)
+[`interactive-state`](https://www.npmjs.com/package/interactive-state)
