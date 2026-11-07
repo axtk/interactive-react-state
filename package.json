@@ -1,7 +1,7 @@
 {
-  "name": "react-statepack",
+  "name": "compact-react-state",
   "version": "0.5.16",
-  "description": "A shared state management and routing lib for React apps",
+  "description": "Shared state management in React apps",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,19 +16,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/axtk/react-statepack.git"
+    "url": "git+https://github.com/axtk/compact-react-state.git"
   },
   "keywords": [
     "state",
     "state management",
     "react state management",
     "shared state",
-    "global state",
-    "routing",
-    "react router"
+    "global state"
   ],
   "license": "MIT",
   "author": "axtk",
+  "allowScripts": {
+    "esbuild": true
+  },
   "peerDependencies": {
     "react": ">=16.8"
   },
@@ -39,11 +40,9 @@
     "@types/react-dom": "^19.3.0",
     "auxsrv": "^0.3.20",
     "immer": "11.2.9",
-    "react-dom": "^19.3.1",
-    "url-shape": "^2.1.6",
-    "zod": "^4.6.7"
+    "react-dom": "^19.3.1"
   },
   "dependencies": {
-    "statepack": "^0.5.3"
+    "compact-state": "^0.6.0"
   }
 }

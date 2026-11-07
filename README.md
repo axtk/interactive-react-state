@@ -1,16 +1,10 @@
-# react-statepack
-
-This library explores an approach to shared state management and routing in React apps that seeks to extend common React patterns in order to produce concise and familiar code.
+# compact-react-state
 
 Core parts:
-
 - Shared state management: [useExternalState](#useexternalstate)
-- Routing: [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [Type-safe routes](#type-safe-routes)
 - Async state management: [useTransientState](#usetransientstate)
 
-Under the hood, routing is a special case of shared state management, too, with the shared state being the URL. So all these core parts fall under the broad category of state management, with `useExternalState()` being the general-purpose React hook for arbitrary state management (which is also the basis of the library's other hooks).
-
-\+ [Annotated live demos](#annotated-live-demos) · [Internals](#internals) · [Motivation and comparison](https://axtk.github.io/posts/react-statepack_backstory)
+\+ [Annotated live demos](#annotated-live-demos)
 
 ## useExternalState
 
@@ -21,7 +15,7 @@ This hook is focused on simplicity of both setting up shared state from scratch 
 Move local state to the full-fledged shared state with minimal paradigm shift and minimal code changes:
 
 ```diff
-+ import { State, useExternalState } from "react-statepack";
++ import { State, useExternalState } from "compact-react-state";
 +
 + const counterState = new State(0);
 
@@ -64,8 +58,8 @@ With SSR, it's common practice to put shared values into React Context rather th
 
 ```diff
 + import { createContext, useContext } from "react";
-- import { State, useExternalState } from "react-statepack";
-+ import { State, useExternalState, useInitialValue } from "react-statepack";
+- import { State, useExternalState } from "compact-react-state";
++ import { State, useExternalState, useInitialValue } from "compact-react-state";
 
 - const counterState = new State(0);
 + const AppContext = createContext(null);
@@ -109,7 +103,7 @@ With SSR, it's common practice to put shared values into React Context rather th
 
 ```js
 import { createContext, useContext } from "react";
-import { State, useExternalState, useInitialValue } from "react-statepack";
+import { State, useExternalState, useInitialValue } from "compact-react-state";
 
 const AppContext = createContext(null);
 
@@ -148,7 +142,7 @@ export function App() {
 Use the `select(state, selector)` utility with `useExternalState()` to pick a state value derived from `state` as defined by the `selector()` function:
 
 ```jsx
-import { State, useExternalState, select } from "react-statepack";
+import { State, useExternalState, select } from "compact-react-state";
 
 const appState = {
   items: new State({/* ... id: { name: string } */}),
@@ -180,7 +174,7 @@ Or, alternatively, with a React Context:
 
 ```jsx
 import { createContext, useContext } from "react";
-import { State, useExternalState, useInitialValue, select } from "react-statepack";
+import { State, useExternalState, useInitialValue, select } from "compact-react-state";
 
 const AppContext = createContext(null);
 
@@ -248,10 +242,10 @@ The same way as with `useState()`, Immer can be optionally used with state sette
 
 ### Persistence across page reloads
 
-Replace `State` with `PersistentState` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload. After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
+Replace `State` with `PersistentState` from `compact-persistent-state` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload. After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
 
 ```js
-import { PersistentState } from "react-statepack";
+import { PersistentState } from "compact-persistent-state";
 
 const counterState = new PersistentState(0, { key: "counter" });
 ```
@@ -264,280 +258,6 @@ const counterState = new PersistentState(0, { key: "counter" });
 
 ⬥ `PersistentState` skips interaction with the browser storage in non-browser environments, which makes it usable with SSR. Since persistent state depends on a browser API (`localStorage` or `sessionStorage`) by default, mismatch errors while hydrating SSR content based on a persisent state should be specifically handled with React's `use(browser())` (v19.3+) or other client-side rendering detection techniques such as [`react-clientside`](https://www.npmjs.com/package/react-clientside).
 
-## useRoute
-
-Use this hook for URL-based rendering and SPA navigation. Under the hood, this boils down to accessing and changing the shared URL state.
-
-### URL-based rendering
-
-URL-based rendering with `at(url, x, y?)` shown below works similarly to conditional rendering with the ternary operator `atURL ? x : y`. It's equally applicable to props and components:
-
-```jsx
-import { useRoute } from "react-statepack";
-
-function App() {
-  const { at } = useRoute();
-
-  return (
-    <header className={at("/", "full", "compact")}>
-      <h1>App</h1>
-    </header>
-    {at("/", <Intro/>)}
-    {at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id}/>)}
-  );
-}
-```
-
-&#x2BC8; [Live demo: URL-based rendering](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx)
-
-⬥ `params` in dynamic values (as in `({ params }) => <Section id={params.id}/>` above) contains the URL pattern's capturing groups.
-
-⬥ Use `at(url)` as a shorthand for `at(url, true, false)`. Example: `<Component isOpen={at("/")}/>`.
-
-⬥ By default, `useRoute` makes use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href={url}>` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing. &#x2BC8; [Live demo: Custom routing based on text input](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)
-
-⬥ See also the [Type-safe routes](#type-safe-routes) section. &#x2BC8; [Live demo: Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx)
-
-⬥ Routing with `react-statepack` is based on the core idea behind all approaches to route-based rendering: conditional rendering based on the URL. Unlike component-, config-, or file-based approaches, the `react-statepack`'s imperative approach sticks to this core idea without additional abstraction layers and specific relations between routes (like layout nesting or parameter inheritance) offering full explicit control over route-based rendering.
-
-### SPA navigation
-
-The shape of the SPA navigation API is largely aligned with the similar built-in browser APIs (while still being compatible with SSR):
-
-```diff
-+ import { A, useRoute } from "react-statepack";
-
-  function UserNav({ signedIn }) {
-+   const { route } = useRoute();
-
-    const handleClick = () => {
--     window.location.href = signedIn ? "/profile" : "/login";
-+     route.href = signedIn ? "/profile" : "/login";
-    };
-
-    return (
-      <nav>
--       <a href="/">Home</a>
-+       <A href="/">Home</A>
-        <button onClick={handleClick}>Profile</button>
-      </nav>
-    );
-  }
-```
-
-&#x2BC8; [Live demo: Link components](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx)
-
-⬥ `<A>` and `<Area>` are the two kinds of SPA route link components available out of the box. They have the same props and semantics as the corresponding HTML link elements `<a>` and `<area>`.
-
-⬥ The `route` object returned from `useRoute()` exposes an API resembling the built-in APIs of `window.location` and `history` carried over to SPA navigation: `.assign(url)`, `.replace(url)`, `.reload()`, `.href`, `.pathname`, `.search`, `.hash`, `.back()`, `.forward()`, `.go(delta)`.
-
-⬥ While `route.assign(url)` and `route.replace(url)` serve as a handy drop-in replacement for the similar `window.location` methods, `route.navigate(options)` combines and extends these methods:
-
-```js
-route.navigate({ href: "/intro", history: "replace", scroll: "off" });
-```
-
-<a name="navigation-options"></a>
-The navigation options, used with `route.navigate(options)`, include:
-
-- `href`, a target URL;
-- `referrer`, an original URL prior to the navigation;
-- `history: "push" | "replace"`, controlling whether to save the navigation to the browser history session or not (default: `"push"`, save);
-- `target`, accepting the HTML link `target` attribute values;
-- `scroll: "auto" | "off"`, controlling whether the content should be automatically scrolled to the top after the navigation, similarly to the ordinary link navigation (`"auto"`, default), or not (`"off"`);
-- `spa: "auto" | "off"`, controlling whether the navigation is in the SPA mode (`"auto"`, default) or requires a full-page reload (`"off"`);
-- `id`, an optional ID that can be used in navigation handlers to identify a specific navigation.
-
-⬥ Tweak link components by adding a relevant combination of the optional `data-` props corresponding to the [navigation options](#navigation-options) outlined above:
-
-```jsx
-<A href="/intro">Intro</A>
-<A href="/intro" data-history="replace">Intro</A>
-<A href="/intro" data-scroll="off">Intro</A>
-<A href="/intro" data-spa="off">Intro</A>
-<A href="/intro" data-id="header-intro-link">Intro</A>
-```
-
-Using props compatible with HTML link attributes makes link components easily interchangeable with HTML links. For this reason, the link components' navigation is shaped by the standard and familiar `href` and `target` props, while the rest of the navigation options can be specified as `data-` attibutes.
-
-⬥ Link components also automatically receive the `data-active="true"` prop whenever their `href` prop matches the current URL, which can be used for additional styling.
-
-⬥ Use the optional `callback` parameter of `useRoute(callback?)` for more fine-grained control over the component rendering in response to URL changes. This callback receives the `render` function as a parameter that should be called at some point. Use cases for this render callback include, for example, activating animated view transitions (&#x2BC8; [Live demo: View transitions](https://codesandbox.io/p/sandbox/w4q95n?file=%252Fsrc%252FApp.tsx)) or (less likely in regular circumstances) skipping re-renders for certain URL changes.
-
-## useNavigationStart / useNavigationComplete
-
-These hooks set up optional actions to be done before and after a SPA navigation occurs respectively. Such intermediate actions are also known as routing middleware.
-
-Some common examples of what can be handled with the routing middleware include redirecting to another URL, preventing navigation with unsaved user input, setting the page title based on the current URL:
-
-```jsx
-import { useNavigationComplete, useNavigationStart } from "react-statepack";
-
-function setTitle({ href }) {
-  document.title = href === "/intro" ? "Intro" : "App";
-}
-
-function App() {
-  const { route } = useRoute();
-  const [hasUnsavedChanges, setUnsavedChanges] = useState(false);
-
-  const handleNavigationStart = useCallback(
-    ({ href }) => {
-      if (hasUnsavedChanges) return false; // Preventing navigation
-
-      if (href === "/") {
-        route.href = "/intro"; // SPA redirection
-        return false;
-      }
-    },
-    [hasUnsavedChanges, route],
-  );
-
-  useNavigationStart(handleNavigationStart);
-  useNavigationComplete(setTitle);
-
-  // ...
-}
-```
-
-&#x2BC8; [Live demo: Routing middleware](https://codesandbox.io/p/sandbox/9ks34r?file=%2Fsrc%2FApp.tsx)
-
-⬥ The object parameter of the hooks' callbacks has the shape of the [navigation options](#navigation-options), including `href` and `referrer`, the navigation destination and initial URLs.
-
-⬥ The callback of both hooks is first called when the component gets mounted if the route is already in the navigation-complete state.
-
-## useRouteState
-
-When it's necessary to put a portion of the app's state to the URL, use this hook to manage URL parameters as state in a `useState`-like manner. Use the React's state mental model and migrate from local state without major code rewrites:
-
-```diff
-+ import { useRouteState } from "react-statepack";
-
-  function App() {
--   const [{ coords }, setState] = useState({ coords: { x: 0, y: 0 } });
-+   const [{ query }, setState] = useRouteState("/");
-
-    const setPosition = () => {
-      setState(state => ({
-        ...state,
--       coords: {
-+       query: {
-          x: Math.random(),
-          y: Math.random(),
-        },
-      });
-    };
-
-    return (
-      <>
-        <h1>Shape</h1>
--       <Shape x={coords.x} y={coords.y}/>
-+       <Shape x={query.x} y={query.y}/>
-        <p><button onClick={setPosition}>Move</button></p>
-      </>
-    );
-  }
-```
-
-&#x2BC8; [Live demo: URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
-
-⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the [navigation options](#navigation-options). Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
-
-⬥ See also the [Type-safe routes](#type-safe-routes) section. &#x2BC8; [Live demo: Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
-
-## Type-safe routes
-
-When it comes to accessing parameters extracted from a URL pattern, by default the parameters are typed as `Record<string, string | undefined>`, which quite literally represents a map containing portions of a string URL.
-
-```tsx
-const { at } = useRoute();
-
-at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id} />);
-//                                   ^ Record<string, string | undefined>
-
-const [state, setState] = useRouteState("/");
-//     ^ { query: Record<string, string | undefined> }
-```
-
-&#x2BC8; Loosely typed routing demos: [URL-based rendering](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx) &middot; [URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
-
-While the loosely typed routing as shown above works just fine, optionally, more specific type-aware parsing of URL parameters can be achieved by replacing string and RegExp URL patterns with URL patterns produced by a schema-based URL builder, like with `url-shape` and `zod` or a [similar tool](https://standardschema.dev/schema#what-schema-libraries-implement-the-spec):
-
-```ts
-import { createURLBuilder } from "url-shape";
-import { z } from "zod"; // Or another Standard Schema-compliant library
-
-// Get a type-aware URL builder `url()` based on a URL schema
-export const url = createURLBuilder({
-  "/sections/:id": z.object({
-    // URL path placeholder parameters
-    params: z.object({ id: z.coerce.number() }),
-  }),
-  "/": z.object({
-    // URL query (or search) parameters
-    query: z.optional(z.object({ x: z.coerce.number(), y: z.coerce.number() })),
-  }),
-});
-```
-
-The type-aware URL builder `url(pattern, options?)` provides hints about the types of the parsed URL parameters and helps avoid typos and type mismatches:
-
-```tsx
-const { at } = useRoute();
-
-at(url("/sections/:id"), ({ params }) => <Section id={params.id} />);
-//                          ^ { id: number }
-
-const [state, setState] = useRouteState(url("/"));
-//     ^ { query?: { x: number, y: number } }
-
-<A href={url("/sections/:id", { id: 1 })}>Section 1</A>;
-//                            ^ { id: number }
-```
-
-&#x2BC8; Live demos: [Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx) &middot; [Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
-
-The URL schema as shown above doesn't have to cover the entire app. This approach allows for incremental or partial adoption of type-safe routing, where needed.
-
-On the other hand, once the entire app is covered with type-safe routes, it might be reasonable to prevent future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
-
-```ts
-declare module "react-statepack" {
-  interface URLConfig {
-    strict: true;
-  }
-}
-```
-
-### Nested routes
-
-All routes are handled independently, so nested routes don't require special handling and don't maintain implicit relations with other routes. This also means that nested routes don't inherit their parent route parameters by default.
-
-With type-safe routes, any practical relations between them can be transparently defined at the URL schema level, without default implicit constraints, too. Here's an example:
-
-```ts
-import { createURLBuilder } from "url-shape";
-import { z } from "zod";
-
-const sectionParams = z.object({
-  sectionId: z.coerce.number(),
-});
-
-export const url = createURLBuilder({
-  "/sections/:sectionId": z.object({
-    params: sectionParams,
-  }),
-  "/sections/:sectionId/stories/:storyId": z.object({
-    params: z.object({
-      ...sectionParams.shape, // Shared URL parameters
-      storyId: z.coerce.number(),
-    }),
-  }),
-});
-```
-
-&#x2BC8; [Live demo: Type-safe nested routes](https://codesandbox.io/p/sandbox/pv9rgh?file=%252Fsrc%252FApp.tsx)
-
 ## useTransientState
 
 Use this hook to track an async action's state, whether it's pending, successfully completed, or failed, without affecting the application's data management.
@@ -545,7 +265,7 @@ Use this hook to track an async action's state, whether it's pending, successful
 In the example below, storing and rendering the essential app data (`items`) and the happy path scenario remain unaffected. The loading and error state handling works like a decoupled scaffolding to the main scenario. (`items` are stored in local state here, but any other state used by the app can be there instead.)
 
 ```diff
-+ import { useTransientState } from "react-statepack";
++ import { useTransientState } from "compact-react-state";
 - import { fetchItems } from "./fetchItems.js";
 + import { fetchItems as fetchItemsOriginal } from "./fetchItems.js";
 
@@ -566,7 +286,7 @@ In the example below, storing and rendering the essential app data (`items`) and
 ```
 
 ```diff
-+ import { useTransientState } from "react-statepack";
++ import { useTransientState } from "compact-react-state";
 
 - export function Status({ state }) {
 + export function Status() {
@@ -625,7 +345,7 @@ fetchItems({ throws: true }).catch(handleError);
 `<TransientStateProvider>` creates an isolated instance of initial shared async action state. Its prime use cases are SSR and tests. It isn't required with client-side rendering, but it can be used to separate action states of larger self-contained portions of an app.
 
 ```jsx
-import { TransientStateProvider } from "react-statepack";
+import { TransientStateProvider } from "compact-react-state";
 
 <TransientStateProvider>
   <App />
@@ -655,26 +375,8 @@ Shared state
 - [Shared state with Immer](https://codesandbox.io/p/sandbox/gv4rgw?file=%252Fsrc%252FApp.tsx)
 - [Selectors](https://codesandbox.io/p/sandbox/738w2p?file=%252Fsrc%252FApp.tsx)
 
-Routing
-
-- [URL-based rendering](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx)
-- [Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx)
-- [Routing middleware](https://codesandbox.io/p/sandbox/9ks34r?file=%2Fsrc%2FApp.tsx)
-- [URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
-- [Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
-- [Type-safe nested routes](https://codesandbox.io/p/sandbox/pv9rgh?file=%252Fsrc%252FApp.tsx)
-- [Unknown routes](https://codesandbox.io/p/sandbox/jnngqt?file=%252Fsrc%252FApp.tsx)
-- [Lazy routes](https://codesandbox.io/p/sandbox/qw5r6g?file=%252Fsrc%252FApp.tsx)
-- [View transitions](https://codesandbox.io/p/sandbox/w4q95n?file=%252Fsrc%252FApp.tsx)
-- [Custom routing based on text input](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)
-- [Converting links in HTML content to SPA links](https://codesandbox.io/p/sandbox/7pfjc7?file=%252Fsrc%252FApp.tsx)
-
 Async action state
 
 - [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx)
 
-Find also the code of these live demos in the repo's [`tests`](https://github.com/axtk/react-statepack/tree/main/tests) directory.
-
-## Internals
-
-[`statepack`](https://www.npmjs.com/package/statepack)
+Find also the code of these live demos in the repo's [`tests`](https://github.com/axtk/compact-react-state/tree/main/tests) directory.

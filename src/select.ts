@@ -1,4 +1,4 @@
-import type { State, StatePayloadMap } from "statepack";
+import type { State, StatePayloadMap } from "compact-state";
 import { shallowEqual } from "./shallowEqual.ts";
 import type { useExternalState } from "./useExternalState.ts";
 
