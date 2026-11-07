@@ -1,0 +1,5 @@
+a[data-active] {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: none;
+}

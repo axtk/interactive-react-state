@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { isState, type State, type StatePayloadMap } from "compact-state";
+import { isState, type State, type StatePayloadMap } from "statepack";
 
 export type Subscribe = (render: () => void) => void | (() => void);
 
