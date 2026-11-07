@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react";
 import type { EventCallback, NavigationOptions } from "interactive-state";
+import { useContext, useEffect } from "react";
 import { RouteContext } from "./RouteContext.ts";
 
 export function useNavigationComplete(

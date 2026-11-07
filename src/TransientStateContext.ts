@@ -1,5 +1,5 @@
-import { createContext } from "react";
 import type { State } from "interactive-state";
+import { createContext } from "react";
 import type { TransientState } from "./types/TransientState.ts";
 
 export const TransientStateContext = createContext(

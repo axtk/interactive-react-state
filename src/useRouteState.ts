@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import {
   compileURL,
   type LocationValue,
@@ -7,6 +6,7 @@ import {
   type NavigationOptions,
   type URLData,
 } from "interactive-state";
+import { useCallback } from "react";
 import { useRoute } from "./useRoute.ts";
 
 export type SetRouteState<T extends LocationValue> = (
