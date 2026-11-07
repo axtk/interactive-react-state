@@ -1,5 +1,5 @@
 {
-  "name": "react-statepack",
+  "name": "interactive-react-state",
   "version": "0.5.16",
   "description": "A shared state management and routing lib for React apps",
   "main": "./dist/index.cjs",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/axtk/react-statepack.git"
+    "url": "git+https://github.com/axtk/interactive-react-state.git"
   },
   "keywords": [
     "state",
