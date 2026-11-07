@@ -29,6 +29,9 @@
   ],
   "license": "MIT",
   "author": "axtk",
+  "allowScripts": {
+    "esbuild": true
+  },
   "peerDependencies": {
     "react": ">=16.8"
   },
