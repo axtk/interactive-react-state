@@ -1,7 +1,6 @@
 # compact-react-state
 
 Core parts:
-
 - Shared state management: [useExternalState](#useexternalstate)
 - Async state management: [useTransientState](#usetransientstate)
 
