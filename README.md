@@ -339,7 +339,7 @@ route.navigate({ href: "/intro", history: "replace", scroll: "off" });
 
 The `options` object takes the shape of the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options).
 
-⬥ Tweak link components by adding a relevant combination of the optional `data-` props corresponding to the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options) outlined above:
+⬥ Tweak link components by adding a relevant combination of `href`, `target`, and `data-` props corresponding to the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options):
 
 ```jsx
 <A href="/intro">Intro</A>
@@ -349,7 +349,7 @@ The `options` object takes the shape of the [navigation options](https://www.npm
 <A href="/intro" data-id="header-intro-link">Intro</A>
 ```
 
-Using props compatible with HTML link attributes makes link components easily interchangeable with HTML links. For this reason, the link components' navigation is shaped by the standard and familiar `href` and `target` props, while the rest of the navigation options can be specified as `data-` attibutes.
+Using props compatible with HTML link attributes makes link components easily interchangeable with HTML links.
 
 ⬥ Link components also automatically receive the `data-active="true"` prop whenever their `href` prop matches the current URL, which can be used for additional styling.
 
