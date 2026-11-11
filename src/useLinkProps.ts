@@ -1,4 +1,4 @@
-import { getNavigationOptions, isRouteEvent } from "interactive-state";
+import { getNavigationOptions, isRouteEvent } from "stategear";
 import { type MouseEvent as ReactMouseEvent, useCallback } from "react";
 import type { AProps } from "./types/AProps.ts";
 import type { AreaProps } from "./types/AreaProps.ts";

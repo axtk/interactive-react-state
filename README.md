@@ -1,4 +1,4 @@
-# interactive-react-state
+# react-stategear
 
 This library explores an approach to shared state management and routing in React apps that seeks to extend common React patterns in order to produce concise and familiar code.
 
@@ -10,7 +10,7 @@ Core parts:
 
 Under the hood, routing is a special case of shared state management, too, with the shared state being the URL. So all these core parts fall under the broad category of state management, with `useExternalState()` being the general-purpose React hook for arbitrary state management (which is also the basis of the library's other hooks).
 
-\+ [Annotated live demos](#annotated-live-demos) · [Internals](#internals) · [Motivation and comparison](https://axtk.github.io/posts/interactive-react-state_backstory)
+\+ [Annotated live demos](#annotated-live-demos) · [Internals](#internals) · [Motivation and comparison](https://axtk.github.io/posts/react-stategear_backstory)
 
 ## useExternalState
 
@@ -21,7 +21,7 @@ This hook is focused on simplicity of both setting up shared state from scratch 
 Move local state to the full-fledged shared state with minimal paradigm shift and minimal code changes:
 
 ```diff
-+ import { State, useExternalState } from "interactive-react-state";
++ import { State, useExternalState } from "react-stategear";
 +
 + const counterState = new State(0);
 
@@ -64,8 +64,8 @@ With SSR, it's common practice to put shared values into React Context rather th
 
 ```diff
 + import { createContext, useContext } from "react";
-- import { State, useExternalState } from "interactive-react-state";
-+ import { State, useExternalState, useInitialValue } from "interactive-react-state";
+- import { State, useExternalState } from "react-stategear";
++ import { State, useExternalState, useInitialValue } from "react-stategear";
 
 - const counterState = new State(0);
 + const AppContext = createContext(null);
@@ -109,7 +109,7 @@ With SSR, it's common practice to put shared values into React Context rather th
 
 ```js
 import { createContext, useContext } from "react";
-import { State, useExternalState, useInitialValue } from "interactive-react-state";
+import { State, useExternalState, useInitialValue } from "react-stategear";
 
 const AppContext = createContext(null);
 
@@ -148,7 +148,7 @@ export function App() {
 Use the `select(state, selector)` utility with `useExternalState()` to pick a state value derived from `state` as defined by the `selector()` function:
 
 ```jsx
-import { State, useExternalState, select } from "interactive-react-state";
+import { State, useExternalState, select } from "react-stategear";
 
 const appState = {
   items: new State({/* ... id: { name: string } */}),
@@ -180,7 +180,7 @@ Or, alternatively, with a React Context:
 
 ```jsx
 import { createContext, useContext } from "react";
-import { State, useExternalState, useInitialValue, select } from "interactive-react-state";
+import { State, useExternalState, useInitialValue, select } from "react-stategear";
 
 const AppContext = createContext(null);
 
@@ -251,7 +251,7 @@ The same way as with `useState()`, Immer can be optionally used with state sette
 Replace `State` with `PersistentState` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload. After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
 
 ```js
-import { PersistentState } from "interactive-react-state";
+import { PersistentState } from "react-stategear";
 
 const counterState = new PersistentState(0, { key: "counter" });
 ```
@@ -273,7 +273,7 @@ Use this hook for URL-based rendering and SPA navigation. Under the hood, this b
 URL-based rendering with `at(url, x, y?)` shown below works similarly to conditional rendering with the ternary operator `atURL ? x : y`. It's equally applicable to props and components:
 
 ```jsx
-import { useRoute } from "interactive-react-state";
+import { useRoute } from "react-stategear";
 
 function App() {
   const { at } = useRoute();
@@ -298,14 +298,14 @@ function App() {
 
 ⬥ See also the [Type-safe routes](#type-safe-routes) section. &#x2BC8; [Live demo: Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx)
 
-⬥ Routing with `interactive-react-state` is based on the core idea behind all approaches to route-based rendering: conditional rendering based on the URL. Unlike component-, config-, or file-based approaches, the `interactive-react-state`'s imperative approach sticks to this core idea without additional abstraction layers and specific relations between routes (like layout nesting or parameter inheritance) offering full explicit control over route-based rendering.
+⬥ Routing with `react-stategear` is based on the core idea behind all approaches to route-based rendering: conditional rendering based on the URL. Unlike component-, config-, or file-based approaches, the `react-stategear`'s imperative approach sticks to this core idea without additional abstraction layers and specific relations between routes (like layout nesting or parameter inheritance) offering full explicit control over route-based rendering.
 
 ### SPA navigation
 
 The shape of the SPA navigation API is largely aligned with the similar built-in browser APIs (while still being compatible with SSR):
 
 ```diff
-+ import { A, useRoute } from "interactive-react-state";
++ import { A, useRoute } from "react-stategear";
 
   function UserNav({ signedIn }) {
 +   const { route } = useRoute();
@@ -337,9 +337,9 @@ The shape of the SPA navigation API is largely aligned with the similar built-in
 route.navigate({ href: "/intro", history: "replace", scroll: "off" });
 ```
 
-The `options` object takes the shape of the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options).
+The `options` object takes the shape of the [navigation options](https://www.npmjs.com/package/stategear#navigation-options).
 
-⬥ Tweak link components by adding a relevant combination of `href`, `target`, and `data-` props corresponding to the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options):
+⬥ Tweak link components by adding a relevant combination of `href`, `target`, and `data-` props corresponding to the [navigation options](https://www.npmjs.com/package/stategear#navigation-options):
 
 ```jsx
 <A href="/intro">Intro</A>
@@ -365,7 +365,7 @@ Some common examples of what can be handled with the routing middleware include 
 import {
   useNavigationComplete,
   useNavigationStart,
-} from "interactive-react-state";
+} from "react-stategear";
 
 function setTitle({ href }) {
   document.title = href === "/intro" ? "Intro" : "App";
@@ -396,7 +396,7 @@ function App() {
 
 &#x2BC8; [Live demo: Routing middleware](https://codesandbox.io/p/sandbox/9ks34r?file=%2Fsrc%2FApp.tsx)
 
-⬥ The object parameter of the hooks' callbacks has the shape of the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options), including `href` and `referrer`, the navigation destination and initial URLs.
+⬥ The object parameter of the hooks' callbacks has the shape of the [navigation options](https://www.npmjs.com/package/stategear#navigation-options), including `href` and `referrer`, the navigation destination and initial URLs.
 
 ⬥ The callback of both hooks is first called when the component gets mounted if the route is already in the navigation-complete state.
 
@@ -405,7 +405,7 @@ function App() {
 When it's necessary to put a portion of the app's state to the URL, use this hook to manage URL parameters as state in a `useState`-like manner. Use the React's state mental model and migrate from local state without major code rewrites:
 
 ```diff
-+ import { useRouteState } from "interactive-react-state";
++ import { useRouteState } from "react-stategear";
 
   function App() {
 -   const [{ coords }, setState] = useState({ coords: { x: 0, y: 0 } });
@@ -435,7 +435,7 @@ When it's necessary to put a portion of the app's state to the URL, use this hoo
 
 &#x2BC8; [Live demo: URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx)
 
-⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the [navigation options](https://www.npmjs.com/package/interactive-state#navigation-options). Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
+⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the [navigation options](https://www.npmjs.com/package/stategear#navigation-options). Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
 
 ⬥ See also the [Type-safe routes](#type-safe-routes) section. &#x2BC8; [Live demo: Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx)
 
@@ -496,7 +496,7 @@ The URL schema as shown above doesn't have to cover the entire app. This approac
 On the other hand, once the entire app is covered with type-safe routes, it might be reasonable to prevent future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
 
 ```ts
-declare module "interactive-react-state" {
+declare module "react-stategear" {
   interface URLConfig {
     strict: true;
   }
@@ -539,7 +539,7 @@ Use this hook to track an async action's state, whether it's pending, successful
 In the example below, storing and rendering the essential app data (`items`) and the happy path scenario remain unaffected. The loading and error state handling works like a decoupled scaffolding to the main scenario. (`items` are stored in local state here, but any other state used by the app can be there instead.)
 
 ```diff
-+ import { useTransientState } from "interactive-react-state";
++ import { useTransientState } from "react-stategear";
 - import { fetchItems } from "./fetchItems.js";
 + import { fetchItems as fetchItemsOriginal } from "./fetchItems.js";
 
@@ -560,7 +560,7 @@ In the example below, storing and rendering the essential app data (`items`) and
 ```
 
 ```diff
-+ import { useTransientState } from "interactive-react-state";
++ import { useTransientState } from "react-stategear";
 
 - export function Status({ state }) {
 + export function Status() {
@@ -619,7 +619,7 @@ fetchItems({ throws: true }).catch(handleError);
 `<TransientStateProvider>` creates an isolated instance of initial shared async action state. Its prime use cases are SSR and tests. It isn't required with client-side rendering, but it can be used to separate action states of larger self-contained portions of an app.
 
 ```jsx
-import { TransientStateProvider } from "interactive-react-state";
+import { TransientStateProvider } from "react-stategear";
 
 <TransientStateProvider>
   <App />
@@ -667,8 +667,8 @@ Async action state
 
 - [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx)
 
-Find also the code of these live demos in the repo's [`tests`](https://github.com/axtk/interactive-react-state/tree/main/tests) directory.
+Find also the code of these live demos in the repo's [`tests`](https://github.com/axtk/react-stategear/tree/main/tests) directory.
 
 ## Internals
 
-[`interactive-state`](https://www.npmjs.com/package/interactive-state)
+[`stategear`](https://www.npmjs.com/package/stategear)

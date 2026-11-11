@@ -1,4 +1,4 @@
-import { State } from "interactive-state";
+import { State } from "stategear";
 import type { ReactNode } from "react";
 import { TransientStateContext } from "./TransientStateContext.ts";
 import type { TransientState } from "./types/TransientState.ts";

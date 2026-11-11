@@ -1,4 +1,4 @@
-import { Route } from "interactive-state";
+import { Route } from "stategear";
 import { type ReactNode, useEffect } from "react";
 import { RouteContext } from "./RouteContext.ts";
 import { useInitialValue } from "./useInitialValue.ts";

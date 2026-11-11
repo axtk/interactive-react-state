@@ -1,4 +1,4 @@
-import type { State, StatePayloadMap } from "interactive-state";
+import type { State, StatePayloadMap } from "stategear";
 import { shallowEqual } from "./shallowEqual.ts";
 import type { useExternalState } from "./useExternalState.ts";
 

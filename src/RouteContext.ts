@@ -1,4 +1,4 @@
-import { Route } from "interactive-state";
+import { Route } from "stategear";
 import { createContext } from "react";
 
 export const RouteContext = createContext(

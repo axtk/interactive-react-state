@@ -1,4 +1,4 @@
-import type { EventCallback, NavigationOptions } from "interactive-state";
+import type { EventCallback, NavigationOptions } from "stategear";
 import { useContext, useEffect } from "react";
 import { RouteContext } from "./RouteContext.ts";
 

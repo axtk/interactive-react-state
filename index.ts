@@ -1,4 +1,4 @@
-export * from "interactive-state";
+export * from "stategear";
 export * from "./src/A.tsx";
 export * from "./src/Area.tsx";
 export * from "./src/RouteContext.ts";

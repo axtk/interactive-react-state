@@ -1,4 +1,4 @@
-import type { NavigationOptions } from "interactive-state";
+import type { NavigationOptions } from "stategear";
 import { useContext, useMemo } from "react";
 import { RouteContext } from "./RouteContext.ts";
 import type { RenderCallback } from "./types/RenderCallback.ts";

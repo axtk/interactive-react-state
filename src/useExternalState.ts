@@ -1,4 +1,4 @@
-import { isState, type State, type StatePayloadMap } from "interactive-state";
+import { isState, type State, type StatePayloadMap } from "stategear";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export type Subscribe = (render: () => void) => void | (() => void);

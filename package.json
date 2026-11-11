@@ -1,5 +1,5 @@
 {
-  "name": "interactive-react-state",
+  "name": "react-stategear",
   "version": "0.7.3",
   "description": "A shared state management and routing lib for React apps",
   "main": "./dist/index.cjs",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/axtk/interactive-react-state.git"
+    "url": "git+https://github.com/axtk/react-stategear.git"
   },
   "keywords": [
     "state",
@@ -47,6 +47,6 @@
     "zod": "^4.6.7"
   },
   "dependencies": {
-    "interactive-state": "^0.7.7"
+    "stategear": "^0.8.0"
   }
 }

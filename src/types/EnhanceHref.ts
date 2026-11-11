@@ -1,4 +1,4 @@
-import type { LocationValue } from "interactive-state";
+import type { LocationValue } from "stategear";
 
 export type EnhanceHref<T extends { href?: string | undefined }> = Omit<
   T,

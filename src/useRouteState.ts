@@ -5,7 +5,7 @@ import {
   matchURL,
   type NavigationOptions,
   type URLData,
-} from "interactive-state";
+} from "stategear";
 import { useCallback } from "react";
 import { useRoute } from "./useRoute.ts";
 
