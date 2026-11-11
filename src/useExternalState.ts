@@ -1,5 +1,5 @@
-import { isState, type State, type StatePayloadMap } from "stategear";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { isState, type State, type StatePayloadMap } from "stategear";
 
 export type Subscribe = (render: () => void) => void | (() => void);
 

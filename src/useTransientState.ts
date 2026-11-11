@@ -1,5 +1,5 @@
-import { isState, State } from "stategear";
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import { isState, State } from "stategear";
 import { TransientStateContext } from "./TransientStateContext.ts";
 import type { TransientState } from "./types/TransientState.ts";
 import {

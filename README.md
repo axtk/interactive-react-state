@@ -362,10 +362,7 @@ These hooks set up optional actions to be done before and after a SPA navigation
 Some common examples of what can be handled with the routing middleware include redirecting to another URL, preventing navigation with unsaved user input, setting the page title based on the current URL:
 
 ```jsx
-import {
-  useNavigationComplete,
-  useNavigationStart,
-} from "react-stategear";
+import { useNavigationComplete, useNavigationStart } from "react-stategear";
 
 function setTitle({ href }) {
   document.title = href === "/intro" ? "Intro" : "App";

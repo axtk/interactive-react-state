@@ -1,5 +1,5 @@
-import type { EventCallback, NavigationOptions } from "stategear";
 import { useContext, useEffect } from "react";
+import type { EventCallback, NavigationOptions } from "stategear";
 import { RouteContext } from "./RouteContext.ts";
 
 export function useNavigationComplete(

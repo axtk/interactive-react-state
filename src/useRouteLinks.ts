@@ -1,5 +1,5 @@
-import type { ContainerElement, Route } from "stategear";
 import { type RefObject, useContext, useEffect } from "react";
+import type { ContainerElement, Route } from "stategear";
 import { RouteContext } from "./RouteContext.ts";
 
 /**

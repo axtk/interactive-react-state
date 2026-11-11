@@ -1,5 +1,5 @@
-import { State } from "stategear";
 import type { ReactNode } from "react";
+import { State } from "stategear";
 import { TransientStateContext } from "./TransientStateContext.ts";
 import type { TransientState } from "./types/TransientState.ts";
 import { useInitialValue } from "./useInitialValue.ts";
