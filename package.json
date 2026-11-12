@@ -6,10 +6,27 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./state": {
+      "types": "./dist/state.d.ts",
+      "import": "./dist/state.mjs",
+      "require": "./dist/state.cjs"
+    },
+    "./router": {
+      "types": "./dist/router.d.ts",
+      "import": "./dist/router.mjs",
+      "require": "./dist/router.cjs"
+    }
+  },
   "scripts": {
     "demo": "npx auxsrv tests/Shared_state_without_Context",
     "preversion": "npx npm-run-all shape test",
-    "shape": "npx codeshape",
+    "shape": "npx codeshape --compile-input index.ts state.ts router.ts",
     "t3": "npx auxsrv tests/Tic-tac-toe",
     "test": "npx playwright test --project=chromium",
     "typecheck": "npx codeshape typecheck"
