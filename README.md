@@ -145,7 +145,7 @@ export function App() {
 
 ### Selectors
 
-Use the `select(state, selector)` utility with `useExternalState()` to pick a state value derived from `state` as defined by the `selector()` function:
+Use the `select((x) => y)` utility function combined with `useExternalState()` to pick a state value derived from `state`. The selector function `(x) => y` passed to `select()` as a parameter defines how the state value returned from `useExternalState()` is transformed.
 
 ```jsx
 import { State, useExternalState, select } from "react-stategear";
@@ -156,10 +156,10 @@ const appState = {
 };
 
 function ItemCard({ id }: { id: string }) {
-  const [name] = useExternalState(...select(
-    appState.items,             // State instance
-    (items) => items[id]?.name, // Selector
-  ));
+  const [name] = useExternalState(
+    appState.items,                     // State instance
+    select((items) => items[id]?.name), // Selector
+  );
 
   return <div className="item">Name: {name}</div>;
 }
@@ -180,15 +180,15 @@ Or, alternatively, with a React Context:
 
 ```jsx
 import { createContext, useContext } from "react";
-import { State, useExternalState, useInitialValue, select } from "react-stategear";
+import { State, select, useExternalState, useInitialValue } from "react-stategear";
 
 const AppContext = createContext(null);
 
 function ItemCard({ id }: { id: string }) {
-  const [name] = useExternalState(...select(
-    useContext(AppContext)?.items, // State instance
-    (items) => items[id]?.name,    // Selector
-  ));
+  const [name] = useExternalState(
+    useContext(AppContext)?.items,      // State instance
+    select((items) => items[id]?.name), // Selector
+  );
 
   return <div className="item">Name: {name}</div>;
 }
@@ -208,37 +208,43 @@ export function App() {
 }
 ```
 
-⬥ With a selector subscription to a `State` instance, the component will only be notified to re-render when the state snapshot returned from the selector changes. By default, whether there's no value change is determined as shallow equality of the previous and current snapshots. Optionally, another equality function can be set as the third parameter of `select()`.
+⬥ With a selector subscription to a `State` instance, the component will only be notified to re-render when the state snapshot returned from the selector changes. By default, whether there's no value change is determined as shallow equality of the previous and current snapshots. Optionally, another equality function can be set as the second parameter of `select((x) => y, equal?)`.
 
-⬥ The state setter returned from `useExternalState(...select(state, selector))` alongside the selector snapshot updates the entire state regardless of the selector.
+⬥ The state setter returned from `useExternalState(state, selector)` alongside the selector snapshot updates the entire state regardless of the selector.
 
 ### Custom subscription
 
-Use the optional second parameter of `useExternalState(state, subscribe?)` for more fine-grained control over component's subscription to the `State` instance and re-renders:
+Use the optional second parameter of `useExternalState(state, subscription?)` for more fine-grained control over component's subscription to the `State` instance and re-renders:
 
 ```js
+import { useMemo } from "react";
+import { State, subscribe, useExternalState } from "react-stategear";
+
 const itemState = new State({
   /* A map of `<id>: <item>` */
 });
 
 // Renders a specific item from `itemState`
 function ItemCard({ id }) {
-  const [items, setItems] = useExternalState(itemState, (render) => {
-    // The subscription to the state events returns a cleanup function.
-    return itemState.on("update", ({ current, previous }) => {
-      // Assuming that the items have a `timestamp` property, re-render
-      // `ItemCard` only if the relevant item's `timestamp` has increased
-      if (current[id].timestamp > previous[id].timestamp) render();
-    });
-  });
+  const [items, setItems] = useExternalState(
+    itemState,
+    subscribe((render) => {
+      // The subscription to the state events returns a cleanup function.
+      return itemState.on("update", ({ current, previous }) => {
+        // Assuming that the items have a `timestamp` property, re-render
+        // `ItemCard` only if the relevant item's `timestamp` has increased
+        if (current[id].timestamp > previous[id].timestamp) render();
+      });
+    }),
+  );
 
   // ...
 }
 ```
 
-⬥ Set the `subscribe` parameter to `false`, as in `useExternalState(state, false)`, to tell the hook not to subscribe the component to tracking the external state updates altogether. A use case for it is when a component makes use of the external state value setter without using the state value itself. The `false` parameter could have been used in the `ResetButton` in the first example above, but in many cases of infrequent updates with lightweight component renders it might be unnecessary, since React automatically skips updating the DOM when there are no changes.
+⬥ Set the `subscription` parameter to `false`, as in `useExternalState(state, false)`, to tell the hook not to subscribe the component to tracking the external state updates altogether. A use case for it is when a component makes use of the external state value setter without using the state value itself. The `false` parameter could have been used in the `ResetButton` in the first example above, but in many cases of infrequent updates with lightweight component renders it might be unnecessary, since React automatically skips updating the DOM when there are no changes.
 
-⬥ Under the hood, the `select(state, selector)` utility, discussed in the previous section, creates a custom subscription based on the selector function. This utility function also makes use of the optional third parameter of `useExternalState()`, `getShapshot()`, a function that returns a value derived from `state`.
+⬥ `subscribe(fn, getSnapshot?)` also accepts an optional second parameter `getShapshot()`, which is a function that returns a value derived from `state`.
 
 ### Integration with Immer
 

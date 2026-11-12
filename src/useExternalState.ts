@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { isState, type State, type StatePayloadMap } from "stategear";
+import { StateSubscription } from "./StateSubscription.ts";
 
-export type Subscribe = (render: () => void) => void | (() => void);
+export type ConvertibleToStateSubscription<T, P extends StatePayloadMap<T>, V = T> = {
+  toSubscription(state: State<T, P>): StateSubscription<V>; 
+};
 
 export type SetExternalStateValue<
   T,
@@ -10,8 +13,7 @@ export type SetExternalStateValue<
 
 export function useExternalState<T, P extends StatePayloadMap<T>, V = T>(
   state: State<T, P> | null | undefined,
-  subscribe?: Subscribe | boolean,
-  getSnapshot?: () => V,
+  subscription?: StateSubscription<V> | ConvertibleToStateSubscription<T, P, V> | boolean,
 ): [V, SetExternalStateValue<T, P>] {
   if (state === undefined || state === null)
     throw new TypeError(`state is ${state} but should be an instance of State`);
@@ -19,11 +21,25 @@ export function useExternalState<T, P extends StatePayloadMap<T>, V = T>(
   if (!isState<T, P>(state))
     throw new TypeError("state is not an instance of State");
 
+  if (typeof subscription === "function")
+    throw new TypeError("subscription cannot be a function; common options are functions wrapped into `select(fn, equal?)` or `subscribe(fn, getSnapshot?)`");
+
   let [, setRevision] = useState(-1);
 
   let setValue = useMemo(() => state.setValue.bind(state), [state]);
   let initialStateRevision = useRef(state.revision);
   let mounted = useRef(false);
+
+  let [
+    subscribe,
+    getSnapshot,
+  ] = useMemo(() => {
+    if (typeof subscription !== "object") return [subscription];
+    let s = "toSubscription" in subscription
+      ? subscription.toSubscription(state)
+      : subscription;
+    return [s.subscribe, s.getSnapshot];
+  }, [state, subscription]);
 
   useEffect(() => {
     // The `start()` and `stop()` methods allow some varieties of State (like
