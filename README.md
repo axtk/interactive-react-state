@@ -1,6 +1,6 @@
 # react-stategear
 
-This library explores an approach to shared state management and routing in React apps that seeks to extend common React patterns in order to produce concise and familiar code.
+This library explores an approach to shared state management and routing in React apps that seeks to extend common React patterns to these topics in order to produce concise and familiar code.
 
 Core parts:
 
