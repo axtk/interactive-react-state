@@ -9,12 +9,18 @@ const users = new State<Record<string, User>>({});
 const points = new State<Record<string, number>>({});
 
 function UserName({ id }: { id: string }) {
-  const [name] = useExternalState(users, select((u) => u[id]?.name));
+  const [name] = useExternalState(
+    users,
+    select((u) => u[id]?.name),
+  );
   return <>{name}</>;
 }
 
 function UserPoints({ id }: { id: string }) {
-  const [value] = useExternalState(points, select((p) => p[id]));
+  const [value] = useExternalState(
+    points,
+    select((p) => p[id]),
+  );
   return <strong>{value ?? 0}</strong>;
 }
 

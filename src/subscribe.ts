@@ -1,5 +1,5 @@
 import { StateSubscription } from "./StateSubscription.ts";
-import { Subscribe } from "./types/Subscribe.ts";
+import type { Subscribe } from "./types/Subscribe.ts";
 
 export function subscribe<V = void>(
   subscribe: Subscribe | null,
